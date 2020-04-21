@@ -29,16 +29,18 @@ RCs = [0x0000000000000001, 0x0000000000008082, 0x800000000000808a,
 
 
 def get_bitstring(message):
+    # Convert the message to a string of 1s and 0s
     bitstring = ''
     for character in message:
         byte = '{0:08b}'.format(ord(character))
-        byte = byte[::-1] #Convert to Little-endian
+        byte = byte[::-1] # Convert to Little-endian
         bitstring += byte
-    bitstring += '01100000' #add the SHA-3 suffix
+    bitstring += '01100000' # Add the SHA-3 suffix
     return bitstring
 
 
 def string_to_array(string,w=64):
+    # Convert a bitstring to (5x5xw) numpy array
     state_array = np.zeros([5,5,w], dtype=int)
     for x in range(5):
         for y in range(5):
@@ -49,6 +51,7 @@ def string_to_array(string,w=64):
 
 
 def hex_to_array(hexnum, w=64):
+    # Convert a hexstring to a 1-dimensional numpy array
     bitstring = '{0:064b}'.format(hexnum)
     bitstring = bitstring[-w:]
     array = np.array([int(bitstring[i]) for i in range(w)])
