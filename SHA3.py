@@ -133,7 +133,7 @@ def squeeze(array, bits):
                 lanestring += str(lane[m])
             for n in range(0,len(lanestring),8):
                 byte = lanestring[n:n+8]
-                byte = byte[::-1] #Convert from Little-endian
+                byte = byte[::-1] # Convert from Little-endian
                 hash += '{0:02x}'.format(int(byte,2))
     return hash[:int(bits/4)]
 
