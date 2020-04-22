@@ -59,25 +59,28 @@ def hex_to_array(hexnum, w=64):
 
 
 def pad(rate, message_length):
+    # Pad the bitstring using pad10*1, as per the SHA-3 specifications
     j = (-(message_length+1))%rate
     return '0' * j + '1'
 
 
 def theta(array, w=64):
+    # For each column, XOR the parity of two adjacent columns
     array_prime = array.copy()
     C, D = np.zeros([5,w], dtype=int), np.zeros([5,w], dtype=int)
     for x in range(5):
         for y in range(5):
-            C[x] ^= array[x][y]
+            C[x] ^= array[x][y] # C[x] is a lane, each entry represents the column parity
     for x in range(5):
-        D[x] = C[(x-1)%5] ^ np.roll(C[(x+1)%5],1)
+        D[x] = C[(x-1)%5] ^ np.roll(C[(x+1)%5],1) # D[x] is a placeholder
     for x in range(5):
         for y in range(5):
-            array_prime[x][y] ^= D[x]
+            array_prime[x][y] ^= D[x] # For each lane, XOR the value of D[x]
     return array_prime
 
 
 def rho(array, w=64):
+    # Circular shift each lane by a precalculated amount (given by the shifts array)
     array_prime = array.copy()
     for x in range(5):
         for y in range(5):
@@ -86,6 +89,7 @@ def rho(array, w=64):
 
 
 def pi(array, w=64):
+    # 'Rotate' each slice according to a modular linear transformation
     array_prime = array.copy()
     for x in range(5):
         for y in range(5):
@@ -94,6 +98,7 @@ def pi(array, w=64):
 
 
 def chi(array, w=64):
+    # Bitwise transfoirmation of each row according to a nonlinear function
     array_prime = np.zeros(array.shape, dtype=int)
     for x in range(5):
         for y in range(5):
@@ -102,6 +107,7 @@ def chi(array, w=64):
 
 
 def iota(array, round_index, w=64):
+    # XOR each lane with a precalculated round constant
     RC = hex_to_array(RCs[round_index],w)
     RC = np.flip(RC)
     array_prime = array.copy()
@@ -110,12 +116,14 @@ def iota(array, round_index, w=64):
 
 
 def keccak(state):
+    # The keccak function defines one transformation round, SHA-3 has 24 in total
     for round_index in range(24):
         state = iota(chi(pi(rho(theta(state)))),round_index)
     return state
 
 
 def squeeze(array, bits):
+   # 'Squeezing' phase of the sponge construction yields the hash
     hash = ''
     for i in range(5):
         for j in range(5):
