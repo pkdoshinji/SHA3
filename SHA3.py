@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import numpy as np
+import argparse
 
 
 l_list = [0,1,2,3,4,5,6]
@@ -138,13 +139,24 @@ def squeeze(array, bits):
     return hash[:int(bits/4)]
 
 
+# The main event
+def main():
 
-message = 'hello'
+    # Command line options (-m) with argparse module:
+    parser = argparse.ArgumentParser()
 
-bitstring = get_bitstring(message)
-padded = bitstring + pad(rate, len(bitstring)%rate)
+    parser.add_argument("-m", "--message", type=str, help="string to be hashed")
 
-state = string_to_array(padded)
-state = keccak(state)
+    args = parser.parse_args()
+    message = args.message
+    bitstring = get_bitstring(message)
+    padded = bitstring + pad(rate, len(bitstring)%rate)
 
-print(squeeze(state,d))
+    state = string_to_array(padded)
+    state = keccak(state)
+
+    print(squeeze(state,d))
+
+
+if __name__ == '__main__':
+    main()
