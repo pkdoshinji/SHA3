@@ -139,9 +139,8 @@ def squeeze(array, bits):
     return hash[:int(bits/4)]
 
 
-# The main event
 def main():
-
+    # The main event
     # Command line options (-m) with argparse module:
     parser = argparse.ArgumentParser()
 
