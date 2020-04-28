@@ -12,13 +12,14 @@ capacity = 512
 rate = b - capacity
 d = 256
 
-
+# Precalculated values for rho function bitshifts 
 shifts = np.array([[0, 36, 3, 41, 18],
                   [1, 44, 10, 45, 2],
                   [62, 6, 43, 15, 61],
                   [28, 55, 25, 21, 56],
                   [27, 20, 39, 8, 14]])
 
+# Precalculated values for iota function round constants
 RCs = [0x0000000000000001, 0x0000000000008082, 0x800000000000808a,
        0x8000000080008000, 0x000000000000808b, 0x0000000080000001,
        0x8000000080008081, 0x8000000000008009, 0x000000000000008a,
@@ -148,12 +149,20 @@ def main():
 
     args = parser.parse_args()
     message = args.message
+    
+    # Convert the input string to a bitstring
     bitstring = get_bitstring(message)
+    
+    # Pad the bitstring according to the pad10*1 function (see SHA3 specifications)
     padded = bitstring + pad(rate, len(bitstring)%rate)
 
+    # Convert the padded string to numpy array
     state = string_to_array(padded)
+    
+    # Process with the Keccak algorithm
     state = keccak(state)
 
+    # The 'squeeze' phase outputs the hash value
     print(squeeze(state,d))
 
 
