@@ -19,6 +19,6 @@ The string to be hashed is entered on the command line using the "-m" switch:
 > ./SHA3.py -m "hello" -o 512
 > 75d527c368f2efe848ecf6b073a36767800805e9eef2b1857d5f984f036eb6df891d75f72d9b154518c1cd58835286d1da9a38deba3de98b5a53e5ed78a84976
 
-(512-bit output gives SHA3-512)
+(512-bit output mode gives SHA3-512)
 
 For the NIST specifications of the SHA3 hash, see https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf
