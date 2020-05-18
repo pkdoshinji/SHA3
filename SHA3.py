@@ -4,15 +4,11 @@ import sys
 import numpy as np
 import argparse
 
-
+# Keccak constants
 l_list = [0,1,2,3,4,5,6]
 l = l_list[6]
 w = (2 ** l)
 b = 25 * w
-#capacity = 512
-#capacity = 512
-#rate = b - capacity
-#d = 256
 
 # Precalculated values for rho function bitshifts
 shifts = np.array([[0, 36, 3, 41, 18],
@@ -143,7 +139,7 @@ def squeeze(array, bits):
 
 
 def usage():
-    print(f"[***] Usage: ./{sys.argv[0]} -m'<Message>' -o <output-bits (224, 256, 384, or 512)>")
+    print(f"[***] Usage: {sys.argv[0]} -m <message string> -o <output-bits (224, 256, 384, or 512)>")
     exit()
 
 
