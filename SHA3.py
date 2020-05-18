@@ -12,7 +12,7 @@ capacity = 512
 rate = b - capacity
 d = 256
 
-# Precalculated values for rho function bitshifts 
+# Precalculated values for rho function bitshifts
 shifts = np.array([[0, 36, 3, 41, 18],
                   [1, 44, 10, 45, 2],
                   [62, 6, 43, 15, 61],
@@ -149,16 +149,16 @@ def main():
 
     args = parser.parse_args()
     message = args.message
-    
+
     # Convert the input string to a bitstring
     bitstring = get_bitstring(message)
-    
+
     # Pad the bitstring according to the pad10*1 function (see SHA3 specifications)
     padded = bitstring + pad(rate, len(bitstring)%rate)
 
     # Convert the padded string to numpy array
     state = string_to_array(padded)
-    
+
     # Process with the Keccak algorithm
     state = keccak(state)
 
