@@ -8,9 +8,10 @@ l_list = [0,1,2,3,4,5,6]
 l = l_list[6]
 w = (2 ** l)
 b = 25 * w
-capacity = 512
-rate = b - capacity
-d = 256
+#capacity = 512
+#capacity = 512
+#rate = b - capacity
+#d = 256
 
 # Precalculated values for rho function bitshifts
 shifts = np.array([[0, 36, 3, 41, 18],
@@ -140,15 +141,33 @@ def squeeze(array, bits):
     return hash[:int(bits/4)]
 
 
+def usage():
+    print(f"[***] Usage: ./{sys.argv[0]} -m'<Message>' -o <output-bits (224, 256, 384, or 512)>")
+    exit()
+
+
 def main():
     # The main event
     # Command line options (-m) with argparse module:
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-m", "--message", type=str, help="string to be hashed")
+    parser.add_argument("-o", "--output_bits", type=str, help="hash function output bits (224, 256, 384, 512)")
 
     args = parser.parse_args()
     message = args.message
+
+    # Get output bits value and validate; default is 256.
+    if not args.output_bits:
+        outbits = 256
+    elif args.output_bits in ['224','256','384','512']:
+        outbits = int(args.output_bits)
+    else:
+        usage()
+
+    # Calculate capacity and rate from outbits
+    capacity = 2 * outbits
+    rate = b - capacity
 
     # Convert the input string to a bitstring
     bitstring = get_bitstring(message)
@@ -163,7 +182,7 @@ def main():
     state = keccak(state)
 
     # The 'squeeze' phase outputs the hash value
-    print(squeeze(state,d))
+    print(squeeze(state, outbits))
 
 
 if __name__ == '__main__':
