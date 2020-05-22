@@ -11,11 +11,11 @@ w = (2 ** l)
 b = 25 * w
 
 # Precalculated values for rho function bitshifts
-shifts = np.array([[0, 36, 3, 41, 18],
-                  [1, 44, 10, 45, 2],
-                  [62, 6, 43, 15, 61],
-                  [28, 55, 25, 21, 56],
-                  [27, 20, 39, 8, 14]])
+shifts = [[0, 36, 3, 41, 18],
+          [1, 44, 10, 45, 2],
+          [62, 6, 43, 15, 61],
+          [28, 55, 25, 21, 56],
+          [27, 20, 39, 8, 14]]
 
 # Precalculated values for iota function round constants
 RCs = [0x0000000000000001, 0x0000000000008082, 0x800000000000808a,
@@ -28,7 +28,7 @@ RCs = [0x0000000000000001, 0x0000000000008082, 0x800000000000808a,
        0x8000000000008080, 0x0000000080000001, 0x8000000080008008]
 
 def get_bitstring(message):
-    # Convert the message to a string of 1s and 0s
+    # Convert the message string to a bitstring of 1s and 0s
     bitstring = ''
     for character in message:
         byte = '{0:08b}'.format(ord(character))
@@ -38,6 +38,7 @@ def get_bitstring(message):
     return bitstring
 
 def get_bitstring_from_file(filename):
+    # Open a binary file and convert to bitstring
     with open(filename, 'rb') as fh:
         bytetext = fh.read()
     return bytes_to_bitstring(bytetext)
@@ -52,7 +53,7 @@ def bytes_to_bitstring(in_bytes):
     return bitstring
 
 def string_to_array(string,w=64):
-    # Convert a bitstring to (5x5xw) numpy array
+    # Convert a bitstring to (5,5,w) numpy array
     state_array = np.zeros([5,5,w], dtype=int)
     for x in range(5):
         for y in range(5):
