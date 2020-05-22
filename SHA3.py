@@ -147,7 +147,7 @@ def squeeze(array, bits):
     return hash[:int(bits/4)]
 
 def usage():
-    print(f"[***] Usage: {sys.argv[0]} -m <message string> -o <output-bits (224, 256, 384, or 512)>")
+    print(f"[***] Usage: {sys.argv[0]} [-m <message string> | -i <filename>] -o <output-bits (224, 256, 384, or 512)>")
     exit()
 
 def main():
