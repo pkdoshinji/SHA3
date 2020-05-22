@@ -22,7 +22,7 @@ a7ffc6f8bf1ed76651c14756a061d662f580ff4de43b49fa82d80a4b80f8434a</br>
 
 `SHA3.py -i "/usr/bin/xeyes"`</br>
 bcdb7ca8a7cf2fe83c440f0f77752d8e4b22e61419afaee3feb667fb8e6c0f2d</br>
-**(default mode is SHA3-256)**
+**(SHA3-256 hash of the binary ELF file xeyes)**
 
 `./SHA3.py -m "hello" -o 512`</br>
 75d527c368f2efe848ecf6b073a36767800805e9eef2b1857d5f984f036eb6df891d75f72d9b154518c1cd58835286d1da9a38deba3de98b5a53e5ed78a84976</br> 
