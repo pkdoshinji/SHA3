@@ -4,6 +4,10 @@ import sys
 import numpy as np
 import argparse
 
+
+filename = 'xeyess'
+
+
 # Keccak constants
 l_list = [0,1,2,3,4,5,6]
 l = l_list[6]
@@ -39,6 +43,23 @@ def get_bitstring(message):
     return bitstring
 
 
+def get_bitstring_from_file(filename):
+    with open(filename, 'rb') as fh:
+        bytetext = fh.read()
+    return bytes_to_bitstring(bytetext)
+
+
+def bytes_to_bitstring(in_bytes):
+    bitstring = ''
+    for bytechar in in_bytes:
+        byte = '{0:08b}'.format(bytechar)
+        byte = byte[::-1]
+        bitstring += byte
+    bitstring += '01100000'
+    return bitstring
+
+
+
 def string_to_array(string,w=64):
     # Convert a bitstring to (5x5xw) numpy array
     state_array = np.zeros([5,5,w], dtype=int)
@@ -48,6 +69,7 @@ def string_to_array(string,w=64):
                 if (w*(5*x+y)+z) < len(string):
                     state_array[y][x][z] = int(string[w*(5*x+y)+z])
     return state_array
+
 
 
 def hex_to_array(hexnum, w=64):
@@ -148,11 +170,14 @@ def main():
     # Command line options (-m) with argparse module:
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("-m", "--message", type=str, help="string to be hashed")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("-m", "--message", type=str, help="string to be hashed")
+    group.add_argument("-i", "--input_file", type=str, help="input file to be hashed")
     parser.add_argument("-o", "--output_bits", type=str, help="hash function output bits (224, 256, 384, 512)")
 
     args = parser.parse_args()
     message = args.message
+    filename = args.input_file
 
     # Get output bits value and validate; default is 256.
     if not args.output_bits:
@@ -166,20 +191,28 @@ def main():
     capacity = 2 * outbits
     rate = b - capacity
 
-    # Convert the input string to a bitstring
-    bitstring = get_bitstring(message)
+    # Convert the input string or file to a bitstring
+    if message:
+        bitstring = get_bitstring(message)
+    elif filename:
+        bitstring = get_bitstring_from_file(filename)
 
     # Pad the bitstring according to the pad10*1 function (see SHA3 specifications)
     padded = bitstring + pad(rate, len(bitstring)%rate)
 
-    # Convert the padded string to numpy array
-    state = string_to_array(padded)
+    sponge_rounds = len(padded) // rate
 
-    # Process with the Keccak algorithm
-    state = keccak(state)
+    state = np.zeros(b, dtype=int).reshape(5,5,w)
+
+    for i in range(sponge_rounds):
+        current_string = padded[(i*rate):(i*rate) + rate]
+        array = string_to_array(current_string, w=64)
+        state = np.bitwise_xor(state, array)
+        state = keccak(state)
 
     # The 'squeeze' phase outputs the hash value
     print(squeeze(state, outbits))
+    exit()
 
 
 if __name__ == '__main__':
