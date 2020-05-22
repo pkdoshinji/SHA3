@@ -110,7 +110,7 @@ def pi(array, w=64):
     return array_prime
 
 def chi(array, w=64):
-    # Bitwise transfoirmation of each row according to a nonlinear function
+    # Bitwise transformation of each row according to a nonlinear function
     array_prime = np.zeros(array.shape, dtype=int)
     for x in range(5):
         for y in range(5):
