@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+''' 
+Author: Patrick kelly
+Last updated: May 22, 2020
+'''
+
 import sys
 import numpy as np
 import argparse
