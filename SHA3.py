@@ -181,6 +181,8 @@ def main():
         bitstring = get_bitstring(message)
     elif filename:
         bitstring = get_bitstring_from_file(filename)
+    else:
+        bitstring = get_bitstring('') 
 
     # Pad the bitstring according to the pad10*1 function (see SHA3 specifications)
     padded = bitstring + pad(rate, len(bitstring)%rate)
